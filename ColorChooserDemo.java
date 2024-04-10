@@ -31,11 +31,13 @@
 
 //package components;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.colorchooser.*;
+import javax.swing.colorchooser.AbstractColorChooserPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /*
  * ColorChooserDemo.java requires these files:
@@ -46,12 +48,19 @@ import javax.swing.colorchooser.*;
  *   images/blue.gif
  */
 @SuppressWarnings("serial")
-public class ColorChooserDemo extends JPanel implements ActionListener, ChangeListener, Runnable {
+public class ColorChooserDemo extends JPanel implements ActionListener, ChangeListener, Runnable
+{
     public JLabel banner;
     public JColorChooser tcc;
+    private Dimension scaledSize;
+    private String title;
 
-    public ColorChooserDemo() {
+    public ColorChooserDemo(String title, Dimension scaledSize)
+    {
         super(new BorderLayout());
+
+        this.title = title;
+        this.scaledSize = scaledSize;
 
         // Set up banner to use as custom preview panel
         banner = new JLabel("Welcome to the Tutorial Zone!", JLabel.CENTER);
@@ -59,7 +68,9 @@ public class ColorChooserDemo extends JPanel implements ActionListener, ChangeLi
         banner.setBackground(Color.blue);
         banner.setOpaque(true);
         banner.setFont(new Font("SansSerif", Font.BOLD, 24));
-        banner.setPreferredSize(new Dimension(100 * 16, 65 * 3));
+        // banner.setPreferredSize(new Dimension(100 * 16, 65 * 3));
+        Dimension bannerSize = new Dimension(scaledSize.width, scaledSize.height/2);
+        banner.setPreferredSize(bannerSize);
 
         JPanel bannerPanel = new JPanel(new BorderLayout());
         bannerPanel.add(banner, BorderLayout.CENTER);
@@ -90,14 +101,16 @@ public class ColorChooserDemo extends JPanel implements ActionListener, ChangeLi
         add(tcc, BorderLayout.PAGE_END);
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e)
+    {
         Color newColor = JColorChooser.showDialog(ColorChooserDemo.this, "Choose Background Color", banner.getBackground());
         if (newColor != null) {
             banner.setBackground(newColor);
         }
     }
 
-    public void stateChanged(ChangeEvent e) {
+    public void stateChanged(ChangeEvent e)
+    {
         Color newColor = tcc.getColor();
         banner.setForeground(newColor);
     }
@@ -109,11 +122,14 @@ public class ColorChooserDemo extends JPanel implements ActionListener, ChangeLi
     public void run()
     {
         // Create and set up the window.
-        JFrame frame = new JFrame("ColorChooserDemo");
+        JFrame frame = new JFrame(this.title);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(scaledSize);
+        frame.setLocation(0, 0);
+        frame.setLocationRelativeTo(null);
 
         // Create and set up the content pane.
-        JComponent newContentPane = new ColorChooserDemo();
+        JComponent newContentPane = new ColorChooserDemo(title, scaledSize);
         newContentPane.setOpaque(true); // content panes must be opaque
         frame.setContentPane(newContentPane);
 
