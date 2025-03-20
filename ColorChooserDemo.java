@@ -53,7 +53,7 @@ public class ColorChooserDemo extends JPanel implements ActionListener, ChangeLi
     public JLabel banner;
     public JColorChooser tcc;
     private Dimension scaledSize;
-    private String title;
+    private final String title;
 
     public ColorChooserDemo(String title, Dimension scaledSize)
     {
